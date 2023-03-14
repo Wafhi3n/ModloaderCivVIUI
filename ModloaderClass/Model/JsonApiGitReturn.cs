@@ -56,7 +56,7 @@ namespace ModloaderClass
         public string url { get; set; }
     }
 
-    public class tags
+    public class Tag
     {
         public string name { get; set; }
         public string zipball_url { get; set; }

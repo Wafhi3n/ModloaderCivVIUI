@@ -22,7 +22,15 @@ namespace ModloaderClass
         public string? depot { get; set; }
         public string? tag { get; set; }
         public string? lastag { get; set; }
+    }
 
+    public class ModSqlite
+    {
+        [Key]
+        public int? Id { get; set; }
+        public string? path { get; set; }
+        public string? modID { get; set; }
+        public Boolean isSteam { get; set; }
     }
 }
 

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ModLoader.Model;
 using ModLoader.Utils;
 using ModloaderClass;
+using ModloaderClass.ModelCivSqlite;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,14 +28,24 @@ namespace MyApp // Note: actual namespace depends on the project name.
             //Console.WriteLine(config.First().Id);           //Mod mod = services.ServiceProvider.GetRequiredService<Mod>();
 
             IServiceScope services = Services.Service.CreateScope();
-            DbSet<Mod> mod = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().mod;
+            DbSet<ModsSqliteCiv> mod = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContextSqliteCiv>().Mods;
+            DbSet<ScannedFilesCiv> scannedFile = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContextSqliteCiv>().ScannedFiles;
+
+            /*foreach (ScannedFilesCiv m in scannedFile.ToList().FindAll(a=>a.))
+            {
+                Console.WriteLine(m);
+           }*/
+
+
+
+
             //BankMod bm = new BankMod();
             //bm.mods = mod.ToList();
-            BankModController bmc = new BankModController();
-          // bmc.InstallAll();
+            //BankModController bmc = new BankModController();
+            //bmc.InstallAll();
 
-           
-           bmc.UpdateAllTags();
+
+            //bmc.UpdateAllTags();
 
             //Root myDeserializedClass = JsonConvert.DeserializeObject<JsonApiGitReturn>(myJsonResponse);
 

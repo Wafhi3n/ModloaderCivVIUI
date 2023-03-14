@@ -18,11 +18,18 @@ namespace ModLoader.Utils
         static Services() {
             IServiceCollection serviceDescriptors = new ServiceCollection();
             serviceDescriptors.AddDbContext<DBConfigurationContext>(a=>a.UseSqlite("Data Source = "+getSqlitePath()));
-            //serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().configModel.First());
+            serviceDescriptors.AddDbContext<DBConfigurationContextSqliteCiv>(a => a.UseSqlite("Data Source = " + getSqlitePathModCiv()));
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().config);
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().mod);
-            //serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().jsonApiGitReturnLastRelease);
-            serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().gitHub);          
+            serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().gitHub);
+
+
+
+                    /**Civ Sqlite**/
+            serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContextSqliteCiv>().Mods);
+            serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContextSqliteCiv>().ScannedFiles);
+
+
 
             Service = serviceDescriptors.BuildServiceProvider();
 
@@ -42,5 +49,26 @@ namespace ModLoader.Utils
 
 
         }
+
+
+        static string getSqlitePathModCiv()
+        {
+
+
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games", "Sid Meier's Civilization VI");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            string chainesqlite = Path.Combine(path, "Mods.sqlite");
+
+            return chainesqlite;
+
+
+        }
+
+
+
     }
 }

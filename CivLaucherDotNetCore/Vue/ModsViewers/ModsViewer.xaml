@@ -48,7 +48,7 @@
                         </DataGridTemplateColumn.Header>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Label x:Name="versionDisponible" HorizontalContentAlignment="Center" Content="{Binding derniereVersionDisponible}" Style="{DynamicResource DatagridModStyleCellLabel}"/>
+                                <Label x:Name="versionDisponible" HorizontalContentAlignment="Center" Content="{Binding lastag}" Style="{DynamicResource DatagridModStyleCellLabel}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -62,7 +62,7 @@
                                 <ComboBox  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="22" SelectedItem="{Binding tagSelect}" SelectionChanged="ComboBox_SelectionChanged" x:Name="tagsCB" ItemsSource="{Binding tags}" >
                                     <ComboBox.ItemTemplate >
                                         <DataTemplate >
-                                            <TextBlock VerticalAlignment="Center"  Text="{Binding FriendlyName}"  />
+                                            <TextBlock VerticalAlignment="Center"  Text="{Binding}"  />
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>

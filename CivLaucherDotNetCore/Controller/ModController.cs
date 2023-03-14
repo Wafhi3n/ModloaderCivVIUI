@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CivLaucherDotNetCore.Vue.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ModLoader.Model;
 using ModLoader.Utils;
@@ -17,10 +18,12 @@ namespace CivLaucherDotNetCore.Controleur
 {
     public class ModController
     {
+
         public Boolean IsUpdateAviable()
         {
-            if (isInstalled() && m.lastag != null && m.lastag != GitController.GetModTag(this) )
+            if (isInstalled() && m.lastag != null && m.lastag != m.tag )
             {
+                //vue.st.setTextUpdateAviable(vue.InfoLabelModCanUpdate());
                 return true;
             }
             else
@@ -28,30 +31,120 @@ namespace CivLaucherDotNetCore.Controleur
                 return false;
             }
         }
-        public string TagActuel()
+        public ModView vue { get; set; }
+
+
+        private List<String> tags { get; set; }
+
+        public List<String> GetTags()
         {
-            return m.tag;
+            return tags;
+        }
+        public void AddTags(string s)
+        {
+
+
+                tags.Add(s);
+            //vue.tags = new ObservableCollection<String>();
+                vue.tags.Add(s); 
+            
         }
 
-        public List<String> tags { get; set; }
 
-        public Mod m { get; set; }
+        private Mod m { get; set; }
+
+        public string tag
+        {
+            get
+            {
+                return m.tag;
+            }
+            set { 
+                
+                m.tag = value; 
+                //vue.tagSelect = m.tag;
+            }
+
+        }
+        public string path
+        {
+            get
+            {
+                return m.path;
+            }
+            set
+            {
+                m.path = value;
+                //vue.tagSelect = m.tag;
+            }
+
+        }
+        public string depot
+        {
+            get
+            {
+                return m.depot;
+            }
+            set
+            {
+                m.depot = value;
+                //vue.tagSelect = m.tag;
+            }
+
+        }
+        public string modId
+        {
+            get
+            {
+                return m.modID;
+            }
+            set
+            {
+                m.modID = value;
+                //vue.tagSelect = m.tag;
+            }
+
+        }
+        public string lastag
+        {
+            get
+            {
+                return m.lastag;
+            }
+            set
+            {
+                m.lastag = value;
+                vue.lastag = m.lastag;
+            }
+
+        }
+
+
+        
+
+
         public ModController(Mod m)
         {
             this.m = m;
             if (isInstalled())
             {
                 tags = new List<String>();
+                GitController.GetModTag(this);
+
             }
             else
             {
             }
+            vue = new ModView(this);
+            
+
 
         }
 
         public void getTagsFromRepo()
         {
-            GitHubApi.getTagsFromRepo(this);
+            GitHubApi.GetTagsFromRepo(this);
+            Console.WriteLine(this.tags);
         }
         public Boolean isInstalled()
         {
@@ -79,7 +172,7 @@ namespace CivLaucherDotNetCore.Controleur
                 //Console.WriteLine(this.m.depot);
                 
                 //GitController.InstallWithGit(this);
-                string tag = GitController.GetLastTag(this);
+                 GitController.GetLastTag(this);
                 //Console.WriteLine(tag);
 
                 //GitController.UpdateToTag(m,tag);
@@ -109,7 +202,7 @@ namespace CivLaucherDotNetCore.Controleur
 
             IServiceScope services = Services.Service.CreateScope();
             DbSet<Mod> DBmod = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().mod;
-            m.lastag = tag;
+            lastag = tag;
             DBmod.Update(m);
 
             services.ServiceProvider.GetService<DBConfigurationContext>().SaveChanges();

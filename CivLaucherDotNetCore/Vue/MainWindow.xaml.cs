@@ -35,7 +35,9 @@ namespace CivLauncher
             DataContext = mainView;
             this.st = new ScrollText(_canMain, labelInfo);
 
-            BankModController bmc = new BankModController();
+            BankModController bmc = new BankModController(st);
+            
+
 
             this.contentControl.Content = new MainFrame(bmc, this.contentControl, st);
         }
@@ -85,8 +87,9 @@ namespace CivLauncher
         }
         public void setTextUpdateAviable(string a)
         {
-            if (labelInfoV == "Bon Jeu"){
-                labelInfoV = "";
+            if (labelInfoV == "Bon Jeu" || labelInfoV == null )
+            {
+                labelInfoV = a;
             }
             else {
                 labelInfoV += a;

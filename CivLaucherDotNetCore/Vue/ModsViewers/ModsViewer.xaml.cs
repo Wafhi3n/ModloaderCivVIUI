@@ -45,7 +45,10 @@ namespace CivLaucherDotNetCore.Vue
 
             foreach( ModController m in bmc.modsController)
             {
-                OMod.Add(new ModView(m, contentControlLabelInfo));
+
+                m.vue.st = contentControlLabelInfo;
+                OMod.Add(m.vue);
+                
             }
             
             this.bmc=bmc;

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CivLauncher;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ModLoader.Utils;
 using ModloaderClass;
@@ -19,9 +20,10 @@ namespace CivLaucherDotNetCore.Controleur
         Config config;
         //public BankMod bm { get; set; }
         public List<ModController> modsController { get; set; }
-        public BankModController()
+        public BankModController( ScrollText st)
         {
-            GetAllModsFromConfig();
+            GetAllModsFromConfig(st);
+
         }
         public void InstallAll()
         {
@@ -42,7 +44,7 @@ namespace CivLaucherDotNetCore.Controleur
         
 
 
-        internal void GetAllModsFromConfig()
+        internal void GetAllModsFromConfig(ScrollText st)
         {
 
             modsController = new List<ModController>();
@@ -52,8 +54,14 @@ namespace CivLaucherDotNetCore.Controleur
             foreach (Mod mod in DBmod.ToList())
             {
 
+
                 ModController mc = new ModController(mod);
-                GitHubApi.getTagsFromRepo(mc);
+                    
+                GitHubApi.GetTagsFromRepo(mc);
+                    
+                //mc.vue.modP = mc;
+                mc.vue.InitializeModView();
+                mc.vue.st=st;
 
                 modsController.Add(mc);
 
@@ -80,12 +88,20 @@ namespace CivLaucherDotNetCore.Controleur
              //  mod.getLastTagNameReleaseFromRepo();
             }        
         }
-        /*public void InitialiseAllModRepoFromPath()
+
+        internal void SetViewScrollText(ScrollText st)
         {
-            foreach (ModController mod in modsController)
+            foreach(ModController mc in modsController)
             {
-               // mod.initLocalRepositoryFromExistingFolder();
+                mc.vue.st = st;
             }
-        }*/
+        }
+        /*public void InitialiseAllModRepoFromPath()
+{
+   foreach (ModController mod in modsController)
+   {
+      // mod.initLocalRepositoryFromExistingFolder();
+   }
+}*/
     }
 }

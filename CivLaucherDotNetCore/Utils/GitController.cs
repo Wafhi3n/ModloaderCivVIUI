@@ -1,4 +1,5 @@
 ﻿using CivLaucherDotNetCore.Controleur;
+using CivLaucherDotNetCore.Vue.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ModLoader.Model;
@@ -15,35 +16,68 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input.Manipulations;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ModLoader.Utils
 {
     public abstract class GitController
     {
-        public static string GetModTag(ModController m)
+        public static async void GetModTag(ModController m)
         {
 
             IServiceScope services = Services.Service.CreateScope();
             DbSet<Mod> DBmod = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().mod;
-            Mod m2 = DBmod.ToList().Find(a => a.path == m.m.path);
+            Mod m2 = DBmod.ToList().Find(a => a.path == m.path);
             string command = "describe --tag";
             SwapToModDirectory(m);
-            string s = StartGitCommand(command);
-            m2.tag = s;
+            string tag = await Task.Run(() => StartGitCommand(command, m));
+
+
+
+            m.tag = tag;
+            //    m2.vue.tag =
+            m2.tag = tag;
             DBmod.Update(m2);
             services.ServiceProvider.GetService<DBConfigurationContext>().SaveChanges();
-            return s;
+
+   
+            m.vue.tagSelect = m.tag;
+
+           
+
         }
+        /*public static async void UpdateCurrentTag(ModController m)
+        {
+
+            IServiceScope services = Services.Service.CreateScope();
+            DbSet<Mod> DBmod = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().mod;
+            Mod m2 = DBmod.ToList().Find(a => a.path == m.path);
+            string command = "describe --tag";
+            SwapToModDirectory(m);
+            string tag = await Task.Run(() => StartGitCommand(command));
+
+
+
+            m2.tag = tag;
+            DBmod.Update(m2);
+            services.ServiceProvider.GetService<DBConfigurationContext>().SaveChanges();
+            //return test;
+        }*/
+
+        
+
 
         public static void SwapToModDirectory(ModController m) {
-            Directory.SetCurrentDirectory(m.m.path);
+            Directory.SetCurrentDirectory(m.path);
         }
-        public static string StartGitCommand(string command)
+        public static string StartGitCommand(string command,ModController mod)
         {
             string test = "";
             try
             {
-                Console.WriteLine(command);
+                //Directory.SetCurrentDirectory(mod.path);
+                //Console.WriteLine(command);
                 var process = new Process
                 {
 
@@ -51,14 +85,15 @@ namespace ModLoader.Utils
                     {
                         FileName = "git",
                         Arguments = command,
-                        //CreateNoWindow = true,
+                        CreateNoWindow = true,
                         RedirectStandardOutput = true,
+                        WorkingDirectory = mod.path
                         //ErrorDialog = false,
                         //RedirectStandardError = true,
                         //RedirectStandardInput = true,
                         //UseShellExecute = true,
                         //WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden
-            }
+                    }
                 };
 
                 process.Start();
@@ -66,17 +101,19 @@ namespace ModLoader.Utils
                 test = test.Replace("\n", ""); //add a line terminating ;
                 process.WaitForExit();
                 process.Dispose();
+                return test;
             }
             catch (DirectoryNotFoundException e)
             {
                 Console.WriteLine("The specified directory does not exist. {0}", e);
+                return null;
             }
-            return test;
+            
         }
         public static void InstallWithGit(ModController mod)
         {
 
-            if (String.IsNullOrEmpty(mod.m.path) || !Directory.Exists(mod.m.path))
+            if (String.IsNullOrEmpty(mod.path) || !Directory.Exists(mod.path))
             {
 
 
@@ -84,6 +121,7 @@ namespace ModLoader.Utils
                 if (!Directory.Exists(dir))
                 {
                     Directory.CreateDirectory(dir);
+                    mod.path = dir;
 
                 }
                 if (Directory.Exists(dir))
@@ -92,18 +130,27 @@ namespace ModLoader.Utils
                     //Set the current directory.
                     Directory.SetCurrentDirectory(dir);
                     IServiceScope services = Services.Service.CreateScope();
-                    //DbSet<Config> config = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().config;
+                    DbSet<Mod> DBmod = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().mod;
+
+                    //Set the current directory.
+                    Directory.SetCurrentDirectory(mod.path);
+                    Mod m2 = DBmod.ToList().Find(a => a.path == mod.path);
 
 
 
-                
+
                     string command = "clone " + mod.UriRepo();
                     //Console.WriteLine(command);
-                    StartGitCommand(command);
+                    StartGitCommand(command,mod);
 
+                    //mod.tag = tag;
+                    //    m2.vue.tag =
+                    //m2.tag = tag;
+                    mod.path = Path.Combine(dir, mod.depot);
 
-
-                    mod.m.path = Path.Combine(dir,mod.m.depot);
+                    m2.path = mod.path;
+                    DBmod.Update(m2);
+                    //m.vue.tagSelect = m.tag;
                     services.ServiceProvider.GetService<DBConfigurationContext>().SaveChanges();
 
 
@@ -111,7 +158,7 @@ namespace ModLoader.Utils
 
             }
         }
-        public static void ResetRepotGit(Mod mod)
+        public static void ResetRepotGit(ModController mod)
         {
             var tcs = new TaskCompletionSource<int>();
 
@@ -121,8 +168,8 @@ namespace ModLoader.Utils
                 {
                     Directory.SetCurrentDirectory(mod.path);
 
-                    StartGitCommand("clean -fxd");
-                    StartGitCommand("reset --hard");
+                    StartGitCommand("clean -fxd", mod);
+                    StartGitCommand("reset --hard", mod);
                 }
                 catch (DirectoryNotFoundException e)
                 {
@@ -136,12 +183,16 @@ namespace ModLoader.Utils
             try
             {
                 
-                if (Directory.Exists(Path.Combine(mod.m.path, ".git")))
+                if (Directory.Exists(Path.Combine(mod.path, ".git")))
                 {
-                    if ( mod.m.tag == null)
+                    if ( mod.tag == null)
                     {
 
                         GetModTag(mod);
+                        //mod.vue.tagSelect = mod.tag;
+
+
+
 
                     }
 
@@ -158,32 +209,69 @@ namespace ModLoader.Utils
             return false;
         }
 
-        public static void UpdateToTag(Mod mod,string tag)
+        public static void UpdateToTag(ModController m, string tag)
         {
-            if (!String.IsNullOrEmpty(mod.path) && Directory.Exists(mod.path))
+            if (!String.IsNullOrEmpty(m.path) && Directory.Exists(m.path))
             {
 
 
                 //string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games", "Sid Meier's Civilization VI", "Mods");
 
-                if (Directory.Exists(mod.path))
+                if (Directory.Exists(m.path))
                 {
 
+                    IServiceScope services = Services.Service.CreateScope();
+                    DbSet<Mod> DBmod = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().mod;
+
                     //Set the current directory.
-                    Directory.SetCurrentDirectory(mod.path);
+                    Directory.SetCurrentDirectory(m.path);
+                    Mod m2 = DBmod.ToList().Find(a => a.path == m.path);
                     //IServiceScope services = Services.Service.CreateScope();
                     //DbSet<Config> config = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().config;
 
 
 
-                    
+
                     string command = "-c advice.detachedHead=false checkout " + tag;
-                    StartGitCommand(command);
+                    StartGitCommand(command, m);
+                    m.tag = tag;
+                    //    m2.vue.tag =
+                    m2.tag = tag;
+                    DBmod.Update(m2);
+                    services.ServiceProvider.GetService<DBConfigurationContext>().SaveChanges();
+
+
+                    m.vue.tagSelect = m.tag;
+
 
                 }
 
             }
         }
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public static  void fetchAll(ModController m)
         {
@@ -195,14 +283,40 @@ namespace ModLoader.Utils
         }
 
 
-        public static string GetLastTag(ModController m)
+        public static void GetLastTag(ModController m)
         {
 
-            string tag = GitHubApi.getLastTagNameReleaseFromRepo(m).Result;
+             GitHubApi.getLastTagNameReleaseFromRepo(m);
            
-            m.UpdatelastTag(tag);
 
-            return tag;
+            //return tag;
+        }
+        public static void updateBranchToTagAsync(ModController m,string tag)
+        {
+
+            if (m.isInstalled())
+            {
+                if (tag != null)
+                {
+                     UpdateToTag(m, tag);
+                    //ommands.Checkout(repository, t.Target.Sha);
+
+                    //m.version = t.FriendlyName;
+                }
+                else
+                {
+                    //Tag LastTag = tags.Last();
+                    //Commands.Checkout(repository, LastTag.Target.Sha);
+                    //m.version = LastTag.FriendlyName;
+                     UpdateToTag(m, m.lastag);
+
+                }
+
+            }
+            else
+            {
+                 InstallWithGit(m);
+            }
         }
     }
 
@@ -210,30 +324,7 @@ namespace ModLoader.Utils
     
 
 
-        /*internal async Task updateBranchToTagAsync(Tag t)
-{
 
-    if (isInstalled())
-    {
-        if (t != null)
-        {
-
-            Commands.Checkout(repository, t.Target.Sha);
-            //m.version = t.FriendlyName;
-        }
-        else
-        {
-            Tag LastTag = tags.Last();
-            Commands.Checkout(repository, LastTag.Target.Sha);
-            //m.version = LastTag.FriendlyName;
-        }
-
-    }
-    else
-    {
-        await cloneMod();
-    }
-}*/
 
         /*public async Task getReleaseTagsFromApi()
 {//            LastTag = tags.First();
