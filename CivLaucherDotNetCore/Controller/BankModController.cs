@@ -17,24 +17,48 @@ namespace CivLaucherDotNetCore.Controleur
         static readonly HttpClient client = new HttpClient();
 
         Config config;
-        public BankMod bm { get; set; }
+        //public BankMod bm { get; set; }
         public List<ModController> modsController { get; set; }
-        public BankModController(BankMod bm)
+        public BankModController()
         {
-            this.bm = bm;
-            IServiceScope services = Services.Service.CreateScope();
-            DbSet < Config > config= services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().config;
-            modsController = new List<ModController>();
+            GetAllModsFromConfig();
         }
+        public void InstallAll()
+        {
+            foreach (var mod in modsController)
+            {
+                mod.Install();
+            }
+        }
+
+        public void UpdateAllTags()
+        {
+            foreach (ModController mod in modsController)
+            {
+                mod.getTagsFromRepo();
+            }
+        }
+
+        
+
+
         internal void GetAllModsFromConfig()
         {
-            foreach (Mod mod in bm.mods)
+
+            modsController = new List<ModController>();
+            IServiceScope services = Services.Service.CreateScope();
+            DbSet<Mod> DBmod = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().mod;
+            //Console.WriteLine(DBmod.Find("1"));
+            foreach (Mod mod in DBmod.ToList())
             {
-                Mod m = new Mod();           
-                bm.mods.Add(m);
-                ModController mc = new ModController(m);
-                //m.mController = mc;
+
+                ModController mc = new ModController(mod);
+                GitHubApi.getTagsFromRepo(mc);
+
                 modsController.Add(mc);
+
+
+
             }
         }
 
@@ -47,6 +71,7 @@ namespace CivLaucherDotNetCore.Controleur
                     //mc.View.InfoLabelModCanUpdate();
                 }
             }
+           
         }
         public void UpdateAllModLastAviableRelease()
         {
@@ -55,12 +80,12 @@ namespace CivLaucherDotNetCore.Controleur
              //  mod.getLastTagNameReleaseFromRepo();
             }        
         }
-        public void InitialiseAllModRepoFromPath()
+        /*public void InitialiseAllModRepoFromPath()
         {
             foreach (ModController mod in modsController)
             {
                // mod.initLocalRepositoryFromExistingFolder();
             }
-        }
+        }*/
     }
 }

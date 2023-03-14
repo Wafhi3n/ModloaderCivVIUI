@@ -43,7 +43,7 @@ namespace CivLaucherDotNetCore.Vue
             this.contentControlLabelInfo = contentControlLabelInfo;
             OMod = new ObservableCollection<ModView>();
 
-            foreach( Mod m in bmc.bm.mods)
+            foreach( ModController m in bmc.modsController)
             {
                 OMod.Add(new ModView(m, contentControlLabelInfo));
             }
@@ -54,10 +54,10 @@ namespace CivLaucherDotNetCore.Vue
             //selectlanguages.Content = new SelectLanguages(view);
             DataGridMod.ItemsSource = OMod;
         }
-        private void update_Click(object sender, RoutedEventArgs e)
+        private async void update_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            ((ModView)(button.DataContext)).updateBranchToTagClickAsync();
+            await ((ModView)(button.DataContext)).updateBranchToTagClickAsync();
         }
 
 

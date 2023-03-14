@@ -6,10 +6,10 @@ namespace ModloaderClass
 {
     public class BankMod
     {
-        public List<Mod>? mods { get; set; }
+        //public List<Mod>? mods { get; set; }
         public BankMod()
         {
-            mods = new List<Mod>();
+           // mods = new List<Mod>();
         }
 
 

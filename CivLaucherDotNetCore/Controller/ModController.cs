@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using ModLoader.Model;
 using ModLoader.Utils;
 using ModloaderClass;
 using Newtonsoft.Json;
@@ -18,7 +19,7 @@ namespace CivLaucherDotNetCore.Controleur
     {
         public Boolean IsUpdateAviable()
         {
-            if (isInstalled() && m.lastag != null && m.lastag != GitController.GetModTag(m) )
+            if (isInstalled() && m.lastag != null && m.lastag != GitController.GetModTag(this) )
             {
                 return true;
             }
@@ -34,15 +35,13 @@ namespace CivLaucherDotNetCore.Controleur
 
         public List<String> tags { get; set; }
 
-        private Mod m { get; set; }
+        public Mod m { get; set; }
         public ModController(Mod m)
         {
             this.m = m;
             if (isInstalled())
             {
                 tags = new List<String>();
-                //initLocalRepositoryFromExistingFolder();
-                //getReleaseTagsFromApi();
             }
             else
             {
@@ -50,6 +49,10 @@ namespace CivLaucherDotNetCore.Controleur
 
         }
 
+        public void getTagsFromRepo()
+        {
+            GitHubApi.getTagsFromRepo(this);
+        }
         public Boolean isInstalled()
         {
 
@@ -58,6 +61,7 @@ namespace CivLaucherDotNetCore.Controleur
                 try
                 {
                     //Repository rp = new Repository(m.path);
+                    GitController.isInstalled(this);
                     return true;
                 }
                 catch (Exception ex)
@@ -68,14 +72,51 @@ namespace CivLaucherDotNetCore.Controleur
             return false;
         }
 
+        public void Install()
+        {
+            if (isInstalled())
+            {
+                //Console.WriteLine(this.m.depot);
+                
+                //GitController.InstallWithGit(this);
+                string tag = GitController.GetLastTag(this);
+                //Console.WriteLine(tag);
+
+                //GitController.UpdateToTag(m,tag);
+            }
+        }
+
+        public string UriRepo()
+        {
+             IServiceScope services = Services.Service.CreateScope();
+            DbSet<Config> Config = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().config;
+            string repoUrl = Config.Find("repoUrl").Value;
+            return repoUrl + "/" + m.owner + "/" + m.depot + ".git"; 
+        }
+
+        public string apiUrl()
+        {
+            IServiceScope services = Services.Service.CreateScope();
+            DbSet<Config> Config = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().config;
+            string apiUrl = Config.Find("apiUrl").Value;
+            return apiUrl + "/" + m.owner + "/" + m.depot;
+        }
 
 
 
+        internal void UpdatelastTag(string tag)
+        {
+
+            IServiceScope services = Services.Service.CreateScope();
+            DbSet<Mod> DBmod = services.ServiceProvider.GetRequiredService<ModLoader.Model.DBConfigurationContext>().mod;
+            m.lastag = tag;
+            DBmod.Update(m);
+
+            services.ServiceProvider.GetService<DBConfigurationContext>().SaveChanges();
+
+
+        }
+    
         
-
-       
-
-
-
     }
 }

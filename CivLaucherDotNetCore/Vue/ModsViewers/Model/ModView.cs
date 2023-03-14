@@ -21,7 +21,7 @@ namespace CivLaucherDotNetCore.Vue.Model
     }
     class ModView : INotifyPropertyChanged
     {
-        private Mod modP;
+        private ModController modP;
         public event PropertyChangedEventHandler PropertyChanged;
         ScrollText st;
 
@@ -77,7 +77,7 @@ namespace CivLaucherDotNetCore.Vue.Model
                 NotifyPropertyChanged();
             }
         }
-        public Mod Model {
+        public ModController Model {
 
             get { return modP; }
 
@@ -128,14 +128,14 @@ namespace CivLaucherDotNetCore.Vue.Model
         }
 
 
-        public ModView(Mod mod, ScrollText st)
+        public ModView(ModController mod, ScrollText st)
         {
             this.modP = mod;
             //this.ModController.View = this;
             this.st = st;
             //changeVisibilityButtonAndStatus(false);
 
-            if (ModController.isInstalled())
+            if (ModController != null && ModController.isInstalled())
             {
                 this.tagSelect = ModController.TagActuel();
                 if (ModController.tags.Count > 0)
@@ -189,12 +189,12 @@ namespace CivLaucherDotNetCore.Vue.Model
         {
             get
             {
-                return modP.depot;
+                return modP.m.depot;
             }
 
             set
             {
-                modP.depot = value;
+                modP.m.depot = value;
                 NotifyPropertyChanged();
             }
         }

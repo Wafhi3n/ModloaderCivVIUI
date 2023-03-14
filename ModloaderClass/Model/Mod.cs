@@ -15,7 +15,7 @@ namespace ModloaderClass
     public class Mod
     {
         [Key]
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string? path { get; set; }
         public string? modID { get; set; }
         public string? owner { get; set; }

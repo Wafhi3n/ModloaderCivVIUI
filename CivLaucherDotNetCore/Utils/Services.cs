@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ModLoader.Model;
+using ModloaderClass;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,6 +21,9 @@ namespace ModLoader.Utils
             //serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().configModel.First());
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().config);
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().mod);
+            //serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().jsonApiGitReturnLastRelease);
+            serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().gitHub);          
+
             Service = serviceDescriptors.BuildServiceProvider();
 
         }
@@ -27,12 +31,13 @@ namespace ModLoader.Utils
         {   
 
             
-        string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Modloader");
-        if(!Directory.Exists(path)) { 
-            Directory.CreateDirectory(path);
-        }
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Modloader");
+            if(!Directory.Exists(path)) { 
+                Directory.CreateDirectory(path);
+            }
 
-        string chainesqlite = Path.Combine(path, "modloaderDBConfig.sqlite");
+            string chainesqlite = Path.Combine(path, "modloaderDBConfig.sqlite");
+                
             return chainesqlite;
 
 

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace ModloaderClass
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<JsonApiGitReturn>(myJsonResponse);
     public class Author
     {
         public string login { get; set; }
@@ -50,4 +49,21 @@ namespace ModloaderClass
         public string zipball_url { get; set; }
         public string body { get; set; }
     }
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<List<Root>>(myJsonResponse);
+    public class Commit
+    {
+        public string sha { get; set; }
+        public string url { get; set; }
+    }
+
+    public class tags
+    {
+        public string name { get; set; }
+        public string zipball_url { get; set; }
+        public string tarball_url { get; set; }
+        public Commit commit { get; set; }
+        public string node_id { get; set; }
+    }
+
+
 }

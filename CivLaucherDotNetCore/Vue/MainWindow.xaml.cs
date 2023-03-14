@@ -1,11 +1,15 @@
 ﻿using CivLaucherDotNetCore.Controleur;
 using CivLaucherDotNetCore.Vue;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using ModLoader.Utils;
 using ModLoader.Vue;
 using ModloaderClass;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -23,30 +27,17 @@ namespace CivLauncher
     {
 
         ScrollText st;
-        //MainWindowViewModel mainView;
+        MainWindowViewModel mainView;
         public MainWindow()
         {
-            //InitializeComponent();
-            //mainView = new MainWindowViewModel();
-            //DataContext = mainView;
-            //this.st = new ScrollText(_canMain, labelInfo);
+            InitializeComponent();
+            mainView = new MainWindowViewModel();
+            DataContext = mainView;
+            this.st = new ScrollText(_canMain, labelInfo);
 
+            BankModController bmc = new BankModController();
 
-            /*var configurationBuilder = new ConfigurationBuilder();
-            var bindConfig = new Config();
-            bindConfig.checkAndCPConfig();
-            configurationBuilder.AddJsonFile(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/ModLoader/appsettings.json");
-            var configuration = configurationBuilder.Build();
-            configuration.Bind(bindConfig);
-            //bindConfig.SaveSettings();*/
-
-
-
-            BankMod bm = new BankMod();
-            BankModController bmc = new BankModController(bm);
-            bmc.GetAllModsFromConfig();
-            bmc.InitialiseAllModRepoFromPath();
-            //this.contentControl.Content = new MainFrame(bmc, this.contentControl, st);
+            this.contentControl.Content = new MainFrame(bmc, this.contentControl, st);
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
