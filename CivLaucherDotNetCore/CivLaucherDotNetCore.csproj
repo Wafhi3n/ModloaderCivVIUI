@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Label="Globals">
+    <WebView2UseWinRT>False</WebView2UseWinRT>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -12,7 +17,7 @@
     <DebugType>embedded</DebugType>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <SignAssembly>False</SignAssembly>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <ApplicationIcon>Ressources\Images\bbg.ico</ApplicationIcon>
 
   </PropertyGroup>
@@ -21,12 +26,25 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>False</Optimize>
     <WarningLevel>6</WarningLevel>
   </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      <Optimize>False</Optimize>
+      <WarningLevel>6</WarningLevel>
+    </PropertyGroup>
+
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <WarningLevel>6</WarningLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       <WarningLevel>6</WarningLevel>
     </PropertyGroup>
 	
@@ -39,6 +57,11 @@
     <None Remove="Ressources\Images\builderSwap.png" />
     <None Remove="Ressources\Images\discord.png" />
     <None Remove="Ressources\Images\discordb.png" />
+    <None Remove="Ressources\Images\Git-Icon-Black.png" />
+    <None Remove="Ressources\Images\gitRouge.png" />
+    <None Remove="Ressources\Images\gitVert.png" />
+    <None Remove="Ressources\Images\steam_icon.png" />
+    <None Remove="Ressources\Images\triangle-exclamation-solid.png" />
   </ItemGroup>
 
 
@@ -69,10 +92,25 @@
     <Resource Include="Ressources\Images\discordb.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Ressources\Images\Git-Icon-Black.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Ressources\Images\gitRouge.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Ressources\Images\gitVert.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Ressources\Images\steam_icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Ressources\Images\triangle-exclamation-solid.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.3">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -85,13 +123,20 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="7.0.4" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1587.40" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <WebView2LoaderPreference>Dynamic</WebView2LoaderPreference>
+</PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\ModloaderClass\ModloaderClass.csproj" />
+    <ProjectReference Include="..\ModloaderStyle\ModloaderStyle.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -105,7 +150,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Update="Vue\MainWindow.xaml.cs">
+    <Compile Update="View\MainView\MainWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -134,7 +179,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Vue\MainWindow.xaml">
+    <Page Update="View\MainView\MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

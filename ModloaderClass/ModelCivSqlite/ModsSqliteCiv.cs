@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +23,14 @@ namespace ModloaderClass.ModelCivSqlite
         [Key]
         public int? ScannedFileRowId { get; set; }
         public string? Path { get; set; }
-        public int? LastWriteTime { get; set; }
+        public string? LastWriteTime { get; set; }
+
+    }
+    public class ModsPropertiesCiv
+    {
+        public int? ModRowId { get; set; }
+        public string? Name { get; set; }
+        public string? Value { get; set; }
 
     }
 }

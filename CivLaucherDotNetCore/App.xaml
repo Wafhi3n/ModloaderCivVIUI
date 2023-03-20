@@ -2,13 +2,14 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:CivLaucherDotNetCore"
-             StartupUri="Vue/MainWindow.xaml">
+             StartupUri="View/MainView/MainWindow.xaml">
+
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Vue/Dictionary/color.xaml" />
-                <ResourceDictionary Source="Vue/Dictionary/button.xaml" />
-                <ResourceDictionary Source="Vue/Dictionary/modsViewerStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ModloaderStyle;component/Style/Dictionary/button.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/ModloaderStyle;component/Style/Dictionary/color.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/ModloaderStyle;component/Style/Dictionary/modsViewerStyle.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

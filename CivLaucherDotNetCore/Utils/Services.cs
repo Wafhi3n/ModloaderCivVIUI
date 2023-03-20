@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ModLoader.Model;
+using ModLoader.Controller;
 using ModloaderClass;
 using System;
 using System.Collections.Generic;
@@ -11,23 +11,35 @@ using System.Threading.Tasks;
 
 namespace ModLoader.Utils
 {
-    public class Services
+    public class ServicesModloader
     {
         static public IServiceProvider Service { get; private set; }
 
-        static Services() {
+        static ServicesModloader() {
             IServiceCollection serviceDescriptors = new ServiceCollection();
             serviceDescriptors.AddDbContext<DBConfigurationContext>(a=>a.UseSqlite("Data Source = "+getSqlitePath()));
+
+
+            //.Database.Migrate();
+
+
             serviceDescriptors.AddDbContext<DBConfigurationContextSqliteCiv>(a => a.UseSqlite("Data Source = " + getSqlitePathModCiv()));
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().config);
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().mod);
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().gitHub);
+            serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().modSqlite);
 
 
-
+            
                     /**Civ Sqlite**/
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContextSqliteCiv>().Mods);
+
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContextSqliteCiv>().ScannedFiles);
+            serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContextSqliteCiv>().ModProperties);
+
+            serviceDescriptors.AddTransient<LocalizationModloader>();
+
+
 
 
 
@@ -55,7 +67,7 @@ namespace ModLoader.Utils
         {
 
 
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games", "Sid Meier's Civilization VI");
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Firaxis Games", "Sid Meier's Civilization VI");
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);

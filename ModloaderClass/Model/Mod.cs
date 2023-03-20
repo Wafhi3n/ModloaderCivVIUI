@@ -10,9 +10,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 
-namespace ModloaderClass
+namespace ModloaderClass.Model
 {
-    public class Mod
+    public class ModGit
     {
         [Key]
         public int? Id { get; set; }
@@ -22,6 +22,7 @@ namespace ModloaderClass
         public string? depot { get; set; }
         public string? tag { get; set; }
         public string? lastag { get; set; }
+        public int? ModRowId { get; set; }
     }
 
     public class ModSqlite
@@ -29,8 +30,13 @@ namespace ModloaderClass
         [Key]
         public int? Id { get; set; }
         public string? path { get; set; }
+        public string? name { get; set; }
         public string? modID { get; set; }
-        public Boolean isSteam { get; set; }
+        public bool? isSteam { get; set; }
+        public int? ModRowId { get; set; }
+        public int? ScannedFileRowId { get; set; }
+
+
     }
 }
 
