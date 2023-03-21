@@ -55,52 +55,17 @@ namespace ModLoader.Controller
 
             modsController = new List<ModGitController>();
             IServiceScope services = ServicesModloader.Service.CreateScope();
+            var context = services.ServiceProvider.GetRequiredService<DBConfigurationContext>();
+            //context.GetConfiguration("nomvariable", 60);
             DbSet<ModGit> DBmod = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().mod;
             //Console.WriteLine(DBmod.Find("1"));
             foreach (ModGit mod in DBmod.ToList())
             {
 
-                /* still installed ?*/
-
-              /*  if (mod.path != null && !Directory.Exists(mod.path))
-                {
-                    mod.path = null;
-                    mod.tag = null;
-                }
-                if (mod.path == null)
-                {
-
-                    mod.tag = null;
-
-                }
-                DBmod.Update(mod);*/
-
                 services.ServiceProvider.GetService<DBConfigurationContext>().SaveChanges();
-
-
-
-
                 ModGitController mc = new ModGitController(mod);
-
-
-
-               
-
-                //GitHubApi.GetTagsFromRepo(mc);
-
-
-
-
-
-                Console.WriteLine(mc.GetTags);
-               if(mod.path!= null)
-                {
-                    GitController.checkClonedMod(mc);
-                }
-
-                //mc.vue.modP = mc;
                 mc.vue.InitializeModView();
-                mc.vue.st = st;
+                mc.vue.announcer = st;
 
                 if (mc.depot !=null && mc.owner !=null)
                 {
@@ -138,15 +103,8 @@ namespace ModLoader.Controller
         {
             foreach (ModGitController mc in modsController)
             {
-                mc.vue.st = st;
+                mc.vue.announcer = st;
             }
         }
-        /*public void InitialiseAllModRepoFromPath()
-{
-   foreach (ModController mod in modsController)
-   {
-      // mod.initLocalRepositoryFromExistingFolder();
-   }
-}*/
     }
 }

@@ -159,9 +159,9 @@ namespace ModLoader.Utils
                     m.AddTags(t.name);
                 }
 
-                if (m.vue.st != null && m.IsUpdateAviable())
+                if (m.vue.announcer != null && m.IsUpdateAviable())
                 {
-                    m.vue.st.setTextUpdateAviable(m.vue.InfoLabelModCanUpdate());
+                    m.vue.announcer.setTextUpdateAviable(m.vue.InfoLabelModCanUpdate());
                 }
 
 

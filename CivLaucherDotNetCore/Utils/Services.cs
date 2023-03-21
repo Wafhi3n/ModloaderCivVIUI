@@ -28,12 +28,12 @@ namespace ModLoader.Utils
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().mod);
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().gitHub);
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().modSqlite);
+            serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContext>().modList);
 
 
-            
-                    /**Civ Sqlite**/
+
+            /**Civ Sqlite**/
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContextSqliteCiv>().Mods);
-
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContextSqliteCiv>().ScannedFiles);
             serviceDescriptors.AddTransient(a => a.GetRequiredService<DBConfigurationContextSqliteCiv>().ModProperties);
 

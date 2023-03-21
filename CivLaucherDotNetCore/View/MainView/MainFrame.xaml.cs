@@ -44,7 +44,7 @@ namespace CivLaucherDotNetCore.Vue
         public BankSqliteModsController bankSqlite { get; set; }
         public RightBarMenu rightBarMenu { get; set; }
         public MainWindow mainWindow { get; set; }
-        public WebView web { get; set; }
+        public WebView webBrowser { get; set; }
 
 
        // public CoreWebView2Environment web { get; set; }
@@ -77,11 +77,11 @@ namespace CivLaucherDotNetCore.Vue
             }
 
             this.modView = new ModsView(this);
-            web =  new WebView();
+            webBrowser =  new WebView();
 
 
 
-            MainContener.Content = web;
+            MainContener.Content = webBrowser;
 
             rightBarMenu = new RightBarMenu(this);
             rightBarMenu.mainFrame = this;
@@ -92,7 +92,8 @@ namespace CivLaucherDotNetCore.Vue
 
 
 
-            Button bp = ModLoaderButton.ButtonPlay(button_Click);
+            Button bp = ModLoaderButton.ButtonPlay();
+            bp.Click += button_Click;
             GridButtonPlay.Children.Add(bp);
 
             //IServiceScope services = Services.Service.CreateScope();

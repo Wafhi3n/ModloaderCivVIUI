@@ -112,11 +112,11 @@ namespace ModLoader.Utils
         {
             IServiceScope services = ServicesModloader.Service.CreateScope();
 
-            DbSet<ModSqlite> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
+            DbSet<Mod> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
             DbSet<ModGit> modGitDB = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().mod;
 
 
-            foreach (ModSqlite ms in modSqlite.ToList())
+            foreach (Mod ms in modSqlite.ToList())
             {
                 if (!Directory.Exists(ms.path))
                 {
@@ -142,11 +142,11 @@ namespace ModLoader.Utils
         {
             IServiceScope services = ServicesModloader.Service.CreateScope();
 
-            DbSet<ModSqlite> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
+            DbSet<Mod> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
 
             if (modSqlite != null)
             {
-                List<ModSqlite> modSqliteL = modSqlite.ToList();
+                List<Mod> modSqliteL = modSqlite.ToList();
            
                 modSqlite.RemoveRange(modSqlite.ToList());               
     
@@ -159,16 +159,16 @@ namespace ModLoader.Utils
         {
             IServiceScope services = ServicesModloader.Service.CreateScope();
             DbSet<ModGit> mods = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().mod;
-            DbSet<ModSqlite> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
+            DbSet<Mod> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
 
 
             foreach (ModGit mg in mods.ToList())
             {
                 Console.WriteLine(modSqlite);
 
-                List<ModSqlite> l = modSqlite.ToList().FindAll(a => a.modID == mg.modID);
+                List<Mod> l = modSqlite.ToList().FindAll(a => a.modID == mg.modID);
 
-                List<ModSqlite> link = modSqlite.ToList().FindAll(a => a.modID == mg.modID).FindAll(a =>a.path == mg.path);
+                List<Mod> link = modSqlite.ToList().FindAll(a => a.modID == mg.modID).FindAll(a =>a.path == mg.path);
 
 
                 List<ModGit> depot = mods.ToList().FindAll(a => a.depot == mg.depot);
@@ -191,7 +191,7 @@ namespace ModLoader.Utils
                 {
                     //bs.AddMod(mg);
 
-                    ModSqlite ms = new ModSqlite();
+                    Mod ms = new Mod();
                     ms.modID = mg.modID;
                     ms.name = mg.depot;
                     ms.isSteam = false;
@@ -215,13 +215,13 @@ namespace ModLoader.Utils
         {
             IServiceScope services = ServicesModloader.Service.CreateScope();
             DbSet<ModsPropertiesCiv> modProperties = services.ServiceProvider.GetRequiredService<DBConfigurationContextSqliteCiv>().ModProperties;
-            DbSet<ModSqlite> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
+            DbSet<Mod> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
 
             foreach (ModsPropertiesCiv m in (modProperties.ToList().FindAll(a => a.Value != "LOC_MOD_AUTHORS_FIRAXIS").FindAll(b => b.Name == "Authors")))
             {
                 Console.WriteLine(m.Value);
 
-                ModSqlite mq = new ModSqlite();
+                Mod mq = new Mod();
                 //mq.name = m.Name;
                 mq.ModRowId = m.ModRowId;
                 modSqlite.Add(mq);
@@ -235,10 +235,10 @@ namespace ModLoader.Utils
         public static void GetNameFromModSqlite()
         {
             IServiceScope services = ServicesModloader.Service.CreateScope();
-            DbSet<ModSqlite> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
+            DbSet<Mod> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
             DbSet<ModsPropertiesCiv> modProperties = services.ServiceProvider.GetRequiredService<DBConfigurationContextSqliteCiv>().ModProperties;
 
-            foreach (ModSqlite mq in modSqlite.ToList())
+            foreach (Mod mq in modSqlite.ToList())
             {
                 if (mq.ModRowId !=null) {
 
@@ -256,11 +256,11 @@ namespace ModLoader.Utils
         public static void GetMoIDFromModSqlite()
         {
             IServiceScope services = ServicesModloader.Service.CreateScope();
-            DbSet<ModSqlite> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
+            DbSet<Mod> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
 
             DbSet<ModsSqliteCiv> modsSqliteciv = services.ServiceProvider.GetRequiredService<DBConfigurationContextSqliteCiv>().Mods;
 
-            foreach (ModSqlite mq in modSqlite.ToList())
+            foreach (Mod mq in modSqlite.ToList())
             {
 
 
@@ -288,13 +288,13 @@ namespace ModLoader.Utils
             IServiceScope services = ServicesModloader.Service.CreateScope();
             DbSet<ModsSqliteCiv> modsSqliteciv = services.ServiceProvider.GetRequiredService<DBConfigurationContextSqliteCiv>().Mods;
             DbSet<ScannedFilesCiv> scannedFile = services.ServiceProvider.GetRequiredService<DBConfigurationContextSqliteCiv>().ScannedFiles;
-            DbSet<ModSqlite> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
+            DbSet<Mod> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
             DbSet<ModGit> modgitDB = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().mod;
 
 
 
 
-            foreach (ModSqlite mq in modSqlite.ToList())
+            foreach (Mod mq in modSqlite.ToList())
             {
 
 

@@ -12,7 +12,8 @@ using System.Runtime.CompilerServices;
 
 namespace ModloaderClass.Model
 {
-    public class ModGit
+
+    public class ModGit 
     {
         [Key]
         public int? Id { get; set; }
@@ -25,7 +26,7 @@ namespace ModloaderClass.Model
         public int? ModRowId { get; set; }
     }
 
-    public class ModSqlite
+    public class Mod
     {
         [Key]
         public int? Id { get; set; }

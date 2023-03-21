@@ -15,7 +15,7 @@ namespace ModLoader.Controller
     {
 
         public ModView vue { get; set; }
-        private ModSqlite m { get; set; }
+        private Mod m { get; set; }
 
         public ModGitController mGit { get; set; }
 
@@ -112,7 +112,7 @@ namespace ModLoader.Controller
             vue = new ModView(this);
         }
 
-        public ModSqliteController(ModSqlite mod, Boolean git)
+        public ModSqliteController(Mod mod, Boolean git)
         {
             vue = new ModView(this);
             m = mod;

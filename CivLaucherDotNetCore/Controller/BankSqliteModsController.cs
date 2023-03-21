@@ -31,7 +31,7 @@ namespace ModLoader.Controller
         public void AddMod(ModGit m,Boolean git)
         {
 
-            ModSqlite ms = new ModSqlite();
+            Mod ms = new Mod();
             ms.modID=m.modID;
             ms.name = m.depot;
 
@@ -72,16 +72,16 @@ namespace ModLoader.Controller
         {
             //services
             IServiceScope services = ServicesModloader.Service.CreateScope();
-            DbSet<ModSqlite> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
+            DbSet<Mod> modSqlite = services.ServiceProvider.GetRequiredService<DBConfigurationContext>().modSqlite;
             OMod = new ObservableCollection<ModView>();
             mods = new List<ModSqliteController>(); 
             DBModSqlitController.ImportDataToDB();
 
 
-            foreach (ModSqlite m in modSqlite.ToList())
+            foreach (Mod m in modSqlite.ToList())
             {
                 ModSqliteController modSqliteController = new ModSqliteController(m,mainframe.isGitInstalled);
-                modSqliteController.vue.st = mainframe.announcer;
+                modSqliteController.vue.announcer = mainframe.announcer;
                 AddMod(modSqliteController);
                 OMod.Add(modSqliteController.vue);
                 

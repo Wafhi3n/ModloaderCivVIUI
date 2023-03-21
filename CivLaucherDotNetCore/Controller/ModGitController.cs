@@ -176,25 +176,12 @@ namespace ModLoader.Controller
         public void getTagsFromRepo()
         {
             GitHubApi.GetTagsFromRepo(this);
-            Console.WriteLine(tags);
+            //Console.WriteLine(tags);
         }
         public bool isInstalled()
         {
 
-            if (Directory.Exists(m.path))
-            {
-                try
-                {
-                    //Repository rp = new Repository(m.path);
-                    GitController.isInstalled(this);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-            }
-            return false;
+            return GitController.isInstalled(this);
         }
 
         public void Install()

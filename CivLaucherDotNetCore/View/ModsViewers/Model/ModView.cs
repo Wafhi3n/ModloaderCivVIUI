@@ -15,7 +15,7 @@ using System.Windows.Controls;
 
 namespace ModLoader.Vue.ModsViewers.Model
 {
-    public enum ButtonAction
+    public enum ButtonActionEnum
     {
         install = 0,
         maj = 1,
@@ -26,7 +26,7 @@ namespace ModLoader.Vue.ModsViewers.Model
         public ModGitController modP { set; get; }
         public ModSqliteController moSP { set; get; }
         public event PropertyChangedEventHandler PropertyChanged;
-        public Announcer st { set; get; }
+        public Announcer announcer { set; get; }
 
         private string buttonViewModVal;
 
@@ -84,21 +84,6 @@ namespace ModLoader.Vue.ModsViewers.Model
                 NotifyPropertyChanged();
             }
         }
-        public ModGitController Model
-        {
-
-            get { return modP; }
-
-            set
-            {
-                if (modP != value)
-                {
-                    modP = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-
         public bool tagCanChange(string g)
         {
 
@@ -116,12 +101,12 @@ namespace ModLoader.Vue.ModsViewers.Model
 
                 if (!modP.isInstalled())
                 {
-                    changeButtonMod(ButtonAction.install);
+                    changeButtonMod(ButtonActionEnum.install);
                     // button to install
                 }
                 else
                 {
-                    changeButtonMod(ButtonAction.maj);
+                    changeButtonMod(ButtonActionEnum.maj);
                     //button to maj
                 }
 
@@ -142,8 +127,6 @@ namespace ModLoader.Vue.ModsViewers.Model
             modP = mod;
             tags = new ObservableCollection<string>();
             changeVisibilityButtonAndStatus(false);
-
-
 
         }
         public ModView(ModSqliteController mod)
@@ -169,12 +152,12 @@ namespace ModLoader.Vue.ModsViewers.Model
                 {
                     if (tagSelect != modP.GetTags().First())
                     {
-                        changeButtonMod(ButtonAction.maj);
+                        changeButtonMod(ButtonActionEnum.maj);
 
                     }
                     else
                     {
-                        changeButtonMod(ButtonAction.rien);
+                        changeButtonMod(ButtonActionEnum.rien);
 
                     }
                 }
@@ -182,7 +165,7 @@ namespace ModLoader.Vue.ModsViewers.Model
             }
             else
             {
-                changeButtonMod(ButtonAction.install);
+                changeButtonMod(ButtonActionEnum.install);
             }
         }
 
@@ -193,19 +176,19 @@ namespace ModLoader.Vue.ModsViewers.Model
 
 
 
-        public void changeButtonMod(ButtonAction a)
+        public void changeButtonMod(ButtonActionEnum a)
         {
 
             //localiser
             switch (a)
             {
-                case ButtonAction.install:
+                case ButtonActionEnum.install:
                     buttonViewMod = "Installer le mod";
                     break;
-                case ButtonAction.rien:
+                case ButtonActionEnum.rien:
                     buttonViewMod = "";
                     break;
-                case ButtonAction.maj:
+                case ButtonActionEnum.maj:
                     buttonViewMod = "Changer de version";
                     break;
             }
@@ -316,9 +299,9 @@ namespace ModLoader.Vue.ModsViewers.Model
             if (tagSelect != null)
             {
                 GitController.updateBranchToTagAsync(modP, tagSelect);
-                st.labelInfoV = "";
-                st.setTextUpdateAviable(InfoLabelModInstall());
-                st.ScrollLabelInfo();
+                announcer.labelInfoV = "";
+                announcer.setTextUpdateAviable(InfoLabelModInstall());
+                announcer.ScrollLabelInfo();
                 changeVisibilityButtonAndStatus(false);
 
             }
@@ -330,9 +313,9 @@ namespace ModLoader.Vue.ModsViewers.Model
 
                     tagSelect = modP.tag;
                     lastag = modP.lastag;
-                    st.labelInfoV = "";
-                    st.setTextUpdateAviable(InfoLabelModInstall());
-                    st.ScrollLabelInfo();
+                    announcer.labelInfoV = "";
+                    announcer.setTextUpdateAviable(InfoLabelModInstall());
+                    announcer.ScrollLabelInfo();
                     changeVisibilityButtonAndStatus(false);
                 }
 
